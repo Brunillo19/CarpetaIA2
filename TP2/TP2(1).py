@@ -205,13 +205,20 @@ def dibujar_pendulo(pantalla, x_carro, theta, fuerza, tiempo, ancho_carro=50, al
     pygame.draw.circle(pantalla, ROJO, (int(x_pend), int(y_pend)), 10)
     
     # Dibujar información
-    texto_angulo = FUENTE.render(f"Ángulo: {np.degrees(theta):.1f}°", True, NEGRO)
-    texto_fuerza = FUENTE.render(f"Fuerza: {fuerza:.2f} N", True, NEGRO)
-    texto_tiempo = FUENTE.render(f"Tiempo: {tiempo:.2f} s", True, NEGRO)
+    # Asegúrate de que los textos sean válidos
+    texto_angulo = FUENTE.render(f"Ángulo: {np.degrees(theta):.1f}°", True, NEGRO) if FUENTE else None
+    texto_fuerza = FUENTE.render(f"Fuerza: {fuerza:.2f} N", True, NEGRO) if FUENTE else None
+    texto_tiempo = FUENTE.render(f"Tiempo: {tiempo:.2f} s", True, NEGRO) if FUENTE else None
     
-    pantalla.blit(texto_angulo, (20, 20))
-    pantalla.blit(texto_fuerza, (20, 50))
-    pantalla.blit(texto_tiempo, (20, 80))
+    # Dibuja solo si el texto es válido
+    if texto_angulo:
+        pantalla.blit(texto_angulo, (20, 20))
+    if texto_fuerza:
+        pantalla.blit(texto_fuerza, (20, 50))
+    if texto_tiempo:
+        pantalla.blit(texto_tiempo, (20, 80))
+    
+
     
     # Indicador de fuerza
     if fuerza != 0:
@@ -250,10 +257,10 @@ def simular_con_animacion(angulo_inicial=0.1, tiempo_total=10):
     historico_tiempo = []
     
     # Mostrar funciones de membresía en ventana aparte
-    plt.figure(figsize=(10, 8))
-    theta.view()
-    plt.title("Funciones de membresía para el ángulo")
-    plt.show(block=False)
+    #plt.figure(figsize=(10, 8))
+    #theta.view()
+    #plt.title("Funciones de membresía para el ángulo")
+    #plt.show(block=False)
     
     # Bucle principal de simulación
     reloj = pygame.time.Clock()
@@ -335,7 +342,7 @@ def generar_graficos(tiempo, theta, fuerza, x_carro, angulo_inicial):
     plt.axhline(0, color='k', linestyle='--', alpha=0.3)
     plt.legend()
     plt.grid(True)
-    plt.title('Fuerza de Control Aplicada')
+    plt.title('Fuerza de Control Aplicada') 
     
     plt.show()
 
@@ -343,17 +350,24 @@ def generar_graficos(tiempo, theta, fuerza, x_carro, angulo_inicial):
 # EJECUCIÓN PRINCIPAL
 # =============================================
 if __name__ == "__main__":
-    print("Iniciando simulación con animación Pygame...")
-    
-    # Ejecutar simulaciones con diferentes ángulos iniciales
     try:
-        # Simulación 1: Pequeña perturbación
-        print("\nSimulación 1: Ángulo inicial = 180°")
-        simular_con_animacion(angulo_inicial=np.radians(180), tiempo_total=5)
-        
-        
+        # Simulación 1
+        pygame.init()  # Debe estar al principio del script
+        FUENTE = pygame.font.SysFont('Arial', 16)  # Después de pygame.init()
+        PANTALLA = pygame.display.set_mode((ANCHO, ALTO))  # Recrear la superficie
+        print("\nSimulación 1: Ángulo inicial = -90°")
+        simular_con_animacion(angulo_inicial=np.radians(-90), tiempo_total=15)
+        pygame.quit()  # Cerrar Pygame después de la simulación 1
+
+        # Simulación 2
+        pygame.init()  # Debe estar al principio del script
+        FUENTE = pygame.font.SysFont('Arial', 16)  # Después de pygame.init()
+        PANTALLA = pygame.display.set_mode((ANCHO, ALTO))  # Recrear la superficie
+        print("\nSimulación 2: Ángulo inicial = 70°")
+        simular_con_animacion(angulo_inicial=np.radians(70), tiempo_total=15)
+        pygame.quit()  # Cerrar Pygame al final
+
     except Exception as e:
         print(f"Error durante la simulación: {str(e)}")
     finally:
-        pygame.quit()
         sys.exit()
