@@ -315,26 +315,40 @@ def simular_con_animacion(angulo_inicial=0.1, tiempo_total=10):
 
 def generar_graficos(tiempo, theta, fuerza, x_carro, angulo_inicial):
     """Genera las gráficas de resultados en ventanas separadas"""
-    # Gráfico 1: Ángulo y posición del carro
-    plt.figure(figsize=(12, 6))
-    plt.subplot(2, 1, 1)
+    # Calcular la velocidad del carro (derivada numérica de la posición)
+    velocidad_carro = np.gradient(x_carro, tiempo)
+    
+    # Gráfico 1: Ángulo, posición y velocidad del carro
+    plt.figure(figsize=(12, 8))  # Aumentamos el tamaño para 3 subplots
+    
+    # Subplot 1: Ángulo del péndulo
+    plt.subplot(3, 1, 1)
     plt.plot(tiempo, np.degrees(theta), 'b', label='Ángulo (grados)')
     plt.ylabel('Ángulo (grados)')
     plt.axhline(0, color='k', linestyle='--', alpha=0.3)
     plt.legend()
     plt.grid(True)
     
-    plt.subplot(2, 1, 2)
+    # Subplot 2: Posición del carro
+    plt.subplot(3, 1, 2)
     plt.plot(tiempo, x_carro, 'g', label='Posición del carro (m)')
-    plt.xlabel('Tiempo (s)')
     plt.ylabel('Posición (m)')
+    plt.axhline(0, color='k', linestyle='--', alpha=0.3)
+    plt.legend()
+    plt.grid(True)
+    
+    # Subplot 3: Velocidad del carro
+    plt.subplot(3, 1, 3)
+    plt.plot(tiempo, velocidad_carro, 'm', label='Velocidad del carro (m/s)')
+    plt.xlabel('Tiempo (s)')
+    plt.ylabel('Velocidad (m/s)')
     plt.axhline(0, color='k', linestyle='--', alpha=0.3)
     plt.legend()
     plt.grid(True)
     
     plt.suptitle(f'Comportamiento del Péndulo Invertido (θ₀ = {np.degrees(angulo_inicial):.1f}°)')
     
-    # Gráfico 2: Fuerza aplicada
+    # Gráfico 2: Fuerza aplicada (se mantiene igual)
     plt.figure(figsize=(12, 4))
     plt.plot(tiempo, fuerza, 'r', label='Fuerza aplicada (N)')
     plt.xlabel('Tiempo (s)')
@@ -345,7 +359,6 @@ def generar_graficos(tiempo, theta, fuerza, x_carro, angulo_inicial):
     plt.title('Fuerza de Control Aplicada') 
     
     plt.show()
-
 # =============================================
 # EJECUCIÓN PRINCIPAL
 # =============================================
